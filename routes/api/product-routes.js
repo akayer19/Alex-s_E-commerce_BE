@@ -3,37 +3,39 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // The `/api/products` endpoint
 
-// get all products
+// Get all products
 router.get('/', async (req, res) => {
   try {
+    // Fetch all products including their associated category and tags
     const products = await Product.findAll({
       include: [{ model: Category }, { model: Tag }],
     });
-    res.json(products);
+    res.json(products); // Return the found products as JSON
   } catch (err) {
     console.error(err);
     res.status(500).json(err);
   }
 });
 
-// get one product
+// Get one product by id
 router.get('/:id', async (req, res) => {
   try {
-    const product = await Product.findByPk(req.params.id, {
+    // Find a product by its id, including its associated category and tags
+    const product = await Product.findByPk(req.params.id, { 
       include: [{ model: Category }, { model: Tag }],
     });
     if (!product) {
       res.status(404).json({ message: 'No product found with this id' });
       return;
     }
-    res.json(product);
+    res.json(product); // Return the found product as JSON
   } catch (err) {
     console.error(err);
     res.status(500).json(err);
   }
 });
 
-// create new product
+// Create new product
 router.post('/', (req, res) => {
   /* req.body should look like this...
     {
@@ -45,7 +47,7 @@ router.post('/', (req, res) => {
   */
   Product.create(req.body)
     .then((product) => {
-      // if there's product tags, we need to create pairings to bulk create in the ProductTag model
+      // If there are product tags, create pairings in the ProductTag model
       if (req.body.tagIds.length) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {
           return {
@@ -55,19 +57,19 @@ router.post('/', (req, res) => {
         });
         return ProductTag.bulkCreate(productTagIdArr);
       }
-      // if no product tags, just respond
+      // If no product tags, just respond with the product data
       res.status(200).json(product);
     })
     .then((productTagIds) => res.status(200).json(productTagIds))
     .catch((err) => {
-      console.log(err);
+      console.error(err);
       res.status(400).json(err);
     });
 });
 
-// update product
+// Update product
 router.put('/:id', (req, res) => {
-  // update product data
+  // Update product data
   Product.update(req.body, {
     where: {
       id: req.params.id,
@@ -75,13 +77,14 @@ router.put('/:id', (req, res) => {
   })
     .then((product) => {
       if (req.body.tagIds && req.body.tagIds.length) {
-
+        // Find all product tags associated with the product
         ProductTag.findAll({
-          where: { product_id: req.params.id }
+          where: { product_id: req.params.id },
         }).then((productTags) => {
-          // create filtered list of new tag_ids
+          // Create a filtered list of existing tag_ids
           const productTagIds = productTags.map(({ tag_id }) => tag_id);
           const newProductTags = req.body.tagIds
+            // Filter out tag_ids that are already associated with the product
             .filter((tag_id) => !productTagIds.includes(tag_id))
             .map((tag_id) => {
               return {
@@ -90,11 +93,11 @@ router.put('/:id', (req, res) => {
               };
             });
 
-          // figure out which ones to remove
+          // Find product tags to remove
           const productTagsToRemove = productTags
             .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
             .map(({ id }) => id);
-          // run both actions
+          // Run both actions
           return Promise.all([
             ProductTag.destroy({ where: { id: productTagsToRemove } }),
             ProductTag.bulkCreate(newProductTags),
@@ -105,13 +108,15 @@ router.put('/:id', (req, res) => {
       return res.json(product);
     })
     .catch((err) => {
-      // console.log(err);
+      console.error(err);
       res.status(400).json(err);
     });
 });
 
+// Delete product by id
 router.delete('/:id', async (req, res) => {
   try {
+    // Delete product with the specified id
     const affectedRows = await Product.destroy({
       where: {
         id: req.params.id,
