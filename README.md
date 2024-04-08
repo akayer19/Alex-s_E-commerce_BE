@@ -26,7 +26,8 @@ To install and run this application locally, follow these steps:
 ## Usage
 To start the server, run the following command:
 'node server.js'
-Please fisit this link for a walkthrough! https://drive.google.com/file/d/1pYzxciBKiU1ddwSbEtS02gRV6Dd_EP5Y/view
+
+Please visit this link for a walkthrough! https://drive.google.com/file/d/1pYzxciBKiU1ddwSbEtS02gRV6Dd_EP5Y/view
 
 ## License
 ![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)
