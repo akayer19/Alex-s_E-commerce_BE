@@ -26,7 +26,7 @@ To install and run this application locally, follow these steps:
 ## Usage
 To start the server, run the following command:
 'node server.js'
-
+Please fisit this link for a walkthrough! https://drive.google.com/file/d/1pYzxciBKiU1ddwSbEtS02gRV6Dd_EP5Y/view
 
 ## License
 ![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)
@@ -61,7 +61,10 @@ Tags
 - DELETE /api/tags/:id: Delete a tag by ID.
 
 ## Screenshot
-![Screenshot](./utils/screenshot.png)
+![Create a new tag!](https://github.com/akayer19/Alex-s_E-commerce_BE/blob/main/public/images/create_new_tag.png)
+![Create all tags!](https://github.com/akayer19/Alex-s_E-commerce_BE/blob/main/public/images/get_all-tags.png)
+![CUpdate a category!](https://github.com/akayer19/Alex-s_E-commerce_BE/blob/main/public/images/update%20category.png)
+
 
 ## Questions
 - If you have any questions, you can reach me on GitHub: <a href="https://github.com/akayer19" target="_blank">GitHub Profile</a>
